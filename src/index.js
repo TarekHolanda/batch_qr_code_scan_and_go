@@ -42,6 +42,7 @@ function formatData(fileRow) {
     }
 
     let i = 1;
+    console.log(i);
     for (const [key, value] of Object.entries(fileRow)) {
         if (key === "data/questions/code_" + i && value) {
             dataTemp.data.questions.push({
