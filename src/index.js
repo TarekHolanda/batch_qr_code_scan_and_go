@@ -8,8 +8,8 @@ import "./index.css";
 import { formatData } from "./formatData";
 
 function Home() {
-    // const [qrCodes, setQrCodes] = useState([{data: '{\"description\":\"Fertilizer 23SB-1002\",\"action\":\"START_REPORT\",\"module\":\"INSPECTOR\",\"data\":{\"pestCategory\":602,\"locations\":[{\"level\":\"block\",\"id\":32098}],\"questions\":[{\"code\":22884,\"answer\":\"5\"},{\"code\":22886,\"answer\":\"56\"}', description: "Fertilizer 23SB-1002"}]);
-    const [qrCodes, setQrCodes] = useState([]);
+    const [qrCodes, setQrCodes] = useState([{data: '{\"description\":\"Fertilizer 23SB-1002\",\"action\":\"START_REPORT\",\"module\":\"INSPECTOR\",\"data\":{\"pestCategory\":602,\"locations\":[{\"level\":\"block\",\"id\":32098}],\"questions\":[{\"code\":22884,\"answer\":\"5\"},{\"code\":22886,\"answer\":\"56\"}', description: "Fertilizer 23SB-1002"}]);
+    // const [qrCodes, setQrCodes] = useState([]);
     const [zipDownloaded, setZipDownloaded] = useState(false);
     const qrRef = useRef();
 
@@ -25,7 +25,7 @@ function Home() {
             const marginContext = canvasWithMargin.getContext("2d");
 
             canvasWithMargin.width = canvas.width + 32;
-            canvasWithMargin.height = canvas.height + 80;
+            canvasWithMargin.height = canvas.height + 96;
             marginContext.fillStyle = "#fff";
             
             marginContext.fillRect(0, 0, canvasWithMargin.width, canvasWithMargin.height);
@@ -40,8 +40,8 @@ function Home() {
             labelContext.fillStyle = "#000000";
             labelContext.lineWidth = 20;
 
-            labelContext.strokeRect(0, 0, canvasWithMargin.width, canvasWithMargin.height);
-            labelContext.fillText(qrCodes[i]["description"], 12, 588);
+            // labelContext.strokeRect(0, 0, canvasWithMargin.width, canvasWithMargin.height);
+            labelContext.fillText(qrCodes[i]["description"], 12, 600);
 
             // const canvasWithLabel = document.createElement("canvas");
             // const labelContext = canvasWithLabel.getContext("2d");
@@ -138,7 +138,7 @@ function Home() {
                 </div>
             )}
 
-            <div ref={qrRef} className="display-none">
+            <div ref={qrRef} className="display-non">
                 {qrCodes.map((qrCode, index) => (
                     <div key={index}>
                         {/* {qrCode["description"]} */}
@@ -149,16 +149,18 @@ function Home() {
                             // className="qr-code"
                             // src="asdasdasd"
                             level={"H"} // L, M, Q, H
-                            // bgColor={"#000"}
+                            // bgColor={"rgb(240, 240, 240)"}
                             // fgColor={"#fff"}
                             // marginSize={150}
                             // includeMargin={true}
                             imageSettings={{
-                                src: "./hc-logo-black.png",
+                                src: "./hc-icon-black.png",
                                 // x: undefined,
                                 // y: undefined,
-                                height: 81,
-                                width: 192,
+                                // height: 81,
+                                // width: 192,
+                                height: 128,
+                                width: 128,
                                 excavate: true,
                             }}
                         />
