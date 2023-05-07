@@ -2,88 +2,87 @@ import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import Papa from "papaparse";
 import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
+import JSZip from "jszip";
+import FileSaver from "file-saver";
 import "./index.css";
-
-function formatData(fileRow) {
-    let dataTemp = {
-        "action": fileRow.action,
-        "module": fileRow.module,
-        "data": {}
-    };
-
-    if (fileRow["data/pestCategory"]) {
-        dataTemp.data.pestCategory = parseInt(fileRow["data/pestCategory"]);
-    }
-
-    if (fileRow["data/crew"]) {
-        dataTemp.data.crew = parseInt(fileRow["data/crew"]);
-    }
-
-    if (fileRow["data/crop"]) {
-        dataTemp.data.cropVariety = parseInt(fileRow["data/crop"]);
-    }
-
-    if (fileRow["data/equipment"]) {
-        dataTemp.data.equipment = parseInt(fileRow["data/equipment"]);
-    }
-
-    if (fileRow["data/locations/level"] && fileRow["data/locations/id"]) {
-        dataTemp.data.locations = [{
-            level: fileRow["data/locations/level"],
-            id: parseInt(fileRow["data/locations/id"]),
-        }];
-    }
-
-    if (fileRow["data/questions/code"] && fileRow["data/questions/answer"]) {
-        dataTemp.data.questions = [{
-            code: parseInt(fileRow["data/questions/code"]),
-            answer: fileRow["data/questions/answer"],
-        }];
-    }
-
-    let i = 1;
-    for (const [key, value] of Object.entries(fileRow)) {
-        if (key === "data/questions/code_" + i && value) {
-            dataTemp.data.questions.push({
-                code: parseInt(fileRow[key]),
-                answer: fileRow["data/questions/answer_" + i],
-            });
-            i++;
-        }
-    }
-
-    return dataTemp;
-}
+import { formatData } from "./formatData";
 
 function Home() {
-    const [qrCodeValue, setQrCodeValue] = useState("");
+    const [qrCodes, setQrCodes] = useState([{data: '{\"description\":\"Fertilizer 23SB-1002\",\"action\":\"START_REPORT\",\"module\":\"INSPECTOR\",\"data\":{\"pestCategory\":602,\"locations\":[{\"level\":\"block\",\"id\":32098}],\"questions\":[{\"code\":22884,\"answer\":\"5\"},{\"code\":22886,\"answer\":\"56\"}', description: "Fertilizer 23SB-1002"}]);
+    // const [qrCodes, setQrCodes] = useState([]);
+    const [zipDownloaded, setZipDownloaded] = useState(false);
     const qrRef = useRef();
-    const isFirstRender = useRef(true);
-    // setQrCodeValue(valuesArray);
 
-    useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return; // 👈️ return early if initial render
+    const downloadQRCode = async (e) => {
+        e.preventDefault();
+        const zip = new JSZip();
+
+        // Generate a QR code for each item in the array and add it to the zip
+        for (let i = 0; i < qrCodes.length; i++) {
+            const canvas = qrRef.current.querySelector("#qrCode" + i);
+
+            const canvasWithMargin = document.createElement("canvas");
+            const marginContext = canvasWithMargin.getContext("2d");
+
+            canvasWithMargin.width = canvas.width + 32;
+            canvasWithMargin.height = canvas.height + 96;
+            marginContext.fillStyle = "#fff";
+            
+            marginContext.fillRect(0, 0, canvasWithMargin.width, canvasWithMargin.height);
+            // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+            marginContext.drawImage(canvas, 16, 16);
+
+            // Draw the QR Code description
+            const labelContext = canvasWithMargin.getContext("2d");
+
+            labelContext.font = "56px Arial";
+            labelContext.textBaseline = "bottom";
+            labelContext.fillStyle = "#000000";
+            labelContext.lineWidth = 20;
+
+            // labelContext.strokeRect(0, 0, canvasWithMargin.width, canvasWithMargin.height);
+            labelContext.fillText(qrCodes[i]["description"], 12, 600);
+
+            // const canvasWithLabel = document.createElement("canvas");
+            // const labelContext = canvasWithLabel.getContext("2d");
+            // canvasWithLabel.width = canvasWithMargin.width + margin;
+            // canvasWithLabel.height = canvasWithMargin.height + margin;
+            // labelContext.font = "48px Arial";
+            // labelContext.textAlign = "start";
+            // labelContext.textBaseline = "bottom";
+            // labelContext.fillStyle = "#000000";
+            // labelContext.lineWidth = 24;
+            // labelContext.strokeRect(0, 0, canvasWithLabel.width, canvasWithLabel.height);
+            // labelContext.fillText(label, labelX, labelY);
+            // labelContext.drawImage(canvasWithMargin, 16, 16);
+
+            const blob = await new Promise((resolve) => canvasWithMargin.toBlob(resolve));
+            const fileName = qrCodes[i]["description"] + ".png";
+            zip.file(fileName, blob);
         }
 
-        console.log("useEffect ran. count is: ", qrCodeValue);
-        downloadQRCode();
-    }, [qrCodeValue]);
+        // Generate the zip file
+        const zipBlob = await zip.generateAsync({ type: "blob" });
 
-    const downloadQRCode = () => {
-        console.log(qrCodeValue);
-        // e.preventDefault();
-        let canvas = qrRef.current.querySelector("canvas");
-        console.log(canvas);
-        let image = canvas.toDataURL("image/png");
-        let anchor = document.createElement("a");
-        anchor.href = image;
-        anchor.download = `qr-code.png`;
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-        // setUrl("");
+        // Save the zip file
+        FileSaver.saveAs(zipBlob, "QR Codes.zip");
+
+        setZipDownloaded(true);
+        // setQrCodes([]);
+
+        // Download Individual QR Code Image
+        // qrCodes.forEach((qrCode, index) => {
+        //     let canvas = qrRef.current.querySelector("#qrCode" + index);
+        //     console.log(canvas);
+        //     let image = canvas.toDataURL("image/png");
+        //     let anchor = document.createElement("a");
+        //     anchor.href = image;
+        //     anchor.download = `qr-code.png`;
+        //     document.body.appendChild(anchor);
+        //     anchor.click();
+        //     document.body.removeChild(anchor);
+        //     // setUrl("");
+        // });
     };
 
     const onFileUploaded = (e) => {
@@ -91,10 +90,18 @@ function Home() {
             header: true,
             skipEmptyLines: true,
             complete: function (results) {
-                const aaa = formatData(results.data[0]);
-                console.log(aaa);
-                setQrCodeValue(JSON.stringify(aaa));
-                console.log("Foi...");
+                let dataFormatted = [];
+
+                for (let i = 0; i < results.data.length; i++) {
+                    const aux = formatData(results.data[i]);
+                    dataFormatted.push({
+                        description: aux.description,
+                        data: JSON.stringify(aux),
+                    });
+                }
+
+                setQrCodes(dataFormatted);
+                setZipDownloaded(false);
             },
         });
     };
@@ -104,28 +111,59 @@ function Home() {
             <div>
                 Upload CSV to generate Scan and Go QR Codes
             </div>
+
+            <label htmlFor="file">Enviar arquivo</label>
             <input
                 type="file"
                 name="file"
+                id="file"
                 accept=".csv"
                 onChange={onFileUploaded}
-                style={{ display: "block", margin: "10px auto" }}
+                className="display-none"
             />
 
-            {/* <QRCodeSVG value="https://reactjs.org/" /> */}
-
-            <button onClick={downloadQRCode}>
+            <button onClick={downloadQRCode} disabled={qrCodes.length < 1}>
                 Download
             </button>
 
-            <div ref={qrRef} className="displany-non">
-                <QRCodeCanvas
-                    value={qrCodeValue}
-                    id="qrCode"
-                    size={512}
-                    // bgColor={"#00ff00"}
-                    level={"H"}
-                />
+            {qrCodes.length > 0 && (
+                <div>
+                    File uploaded successfully!
+                </div>
+            )}
+
+            {zipDownloaded && (
+                <div>
+                    QR Codes downloaded successfully!
+                </div>
+            )}
+
+            <div ref={qrRef} className="display-non">
+                {qrCodes.map((qrCode, index) => (
+                    <div key={index}>
+                        {/* {qrCode["description"]} */}
+                        <QRCodeCanvas
+                            value={qrCode["data"]}
+                            id={"qrCode" + index}
+                            size={512}
+                            // className="qr-code"
+                            // src="asdasdasd"
+                            level={"H"} // L, M, Q, H
+                            // bgColor={"rgb(240, 240, 240)"}
+                            // fgColor={"#fff"}
+                            // marginSize={150}
+                            // includeMargin={true}
+                            imageSettings={{
+                                src: "./hc-icon-black.png",
+                                // x: undefined,
+                                // y: undefined,
+                                height: 103,
+                                width: 128,
+                                excavate: true,
+                            }}
+                        />
+                    </div>
+                ))}
             </div>
         </div>
     );
