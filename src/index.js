@@ -157,9 +157,7 @@ function Home() {
                                 src: "./hc-icon-black.png",
                                 // x: undefined,
                                 // y: undefined,
-                                // height: 81,
-                                // width: 192,
-                                height: 128,
+                                height: 103,
                                 width: 128,
                                 excavate: true,
                             }}
