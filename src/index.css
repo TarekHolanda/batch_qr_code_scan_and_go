@@ -6,22 +6,39 @@ body {
     padding-top: 48px;
 }
 
+button, label {
+    border: 1px solid white !important;
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.color-black {
+    color: black;
+}
+
+.padding-side-4 {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.padding-bottom-32 {
+    padding-bottom: 32px;
+}
+
 .display-none {
     display: none;
 }
 
-button, label {
-    background: #1B1C1E;
-    color: white;
-    border: 1px solid white;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 10px;
-    margin: 48px;
+.display-block {
+    display: block;
 }
 
-button:hover, label:hover {
-    background: white;
-    color: #1B1C1E;
+.line-break-any {
+    line-break: anywhere;
+}
+
+.font-size-24 {
+    font-size: 24px;
 }
