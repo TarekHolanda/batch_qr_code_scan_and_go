@@ -36,7 +36,6 @@ function Home() {
             const canvas = qrRef.current.querySelector("#qrCode" + i);
 
             const descriptionSize = qrCodes[i]["description"].length;
-            console.log(descriptionSize);
             
             // Add margin to the QR Code
             const canvasWithMargin = document.createElement("canvas");
