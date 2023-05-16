@@ -42,9 +42,9 @@ function Home() {
             const marginContext = canvasWithMargin.getContext("2d");
             canvasWithMargin.width = canvas.width + 32;
 
-            if (descriptionSize > 44) {
+            if (descriptionSize >= 45) {
                 canvasWithMargin.height = canvas.height + 184;
-            } else if (descriptionSize > 23) {
+            } else if (descriptionSize >= 23) {
                 canvasWithMargin.height = canvas.height + 136;
             } else {
                 canvasWithMargin.height = canvas.height + 88;
@@ -62,11 +62,11 @@ function Home() {
             labelContext.lineWidth = 20;
             
             labelContext.fillText(qrCodes[i]["description"].substring(0, 23), 12, 592);
-            if (descriptionSize > 23) {
-                labelContext.fillText(qrCodes[i]["description"].substring(23, 43), 12, 640);
+            if (descriptionSize >= 23) {
+                labelContext.fillText(qrCodes[i]["description"].substring(23, 44), 12, 640);
             }
-            if (descriptionSize > 44) {
-                labelContext.fillText(qrCodes[i]["description"].substring(43, descriptionSize), 12, 688);
+            if (descriptionSize >= 45) {
+                labelContext.fillText(qrCodes[i]["description"].substring(44, descriptionSize), 12, 688);
             }
 
             const blob = await new Promise((resolve) => canvasWithMargin.toBlob(resolve));
