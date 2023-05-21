@@ -4,6 +4,7 @@ import Papa from "papaparse";
 import QRCodeCanvas from "qrcode.react";
 import JSZip from "jszip";
 import FileSaver from "file-saver";
+import { PDFDownloadLink, View, Text, PDFViewer, Image } from "@react-pdf/renderer";
 
 import "./index.css";
 import { formatData } from "./formatData";
@@ -19,13 +20,111 @@ import CssBaseline from "@mui/material/CssBaseline";
 import UploadIcon from "@mui/icons-material/UploadFile";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PdfIcon from "@mui/icons-material/PictureAsPdf";
 import { darkTheme } from "./darkTheme";
+import { styles } from "./styles";
+import { MyDocument } from "./MyDocument";
 
 function Home() {
     const [qrCodes, setQrCodes] = useState([]);
+    const [qrCodesPDF, setQrCodesPDF] = useState(<View></View>);
     const [qrCodesLoaded, setQrCodesLoaded] = useState(false);
     const [loading, setLoading] = useState(false);
     const qrRef = useRef();
+
+    const generatePDF = (qrCodes) => {
+        let aux = [];
+
+        for (let i = 0; i < qrCodes.length; i++) {
+            const canvas = qrRef?.current?.querySelector("#qrCode" + i);
+            const qrCodeDataUri = canvas.toDataURL();
+            aux.push({
+                qrCodeDataUri: qrCodeDataUri,
+                description: qrCodes[i]["description"],
+            });
+        }
+
+        let table = [];
+        for (let i = 0; i < aux.length; i += 9) {
+            table.push(
+                <View style={styles.vertical}>
+                    <View style={styles.inline} key={"view" + i}>
+                        <View>
+                            <Image src={{ uri: aux[i] ? aux[i].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
+                            <Text style={styles.description}>
+                                {aux[i] ? aux[i].description + (i) : ""}
+                            </Text>
+                        </View>
+                        
+                        <View>
+                            <Image src={{ uri: aux[i + 1] ? aux[i + 1].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
+                            <Text style={styles.description}>
+                                {aux[i + 1] ? aux[i + 1].description + (i + 1) : ""}
+                            </Text>
+                        </View>
+                        
+                        <View>
+                            <Image src={{ uri: aux[i + 2] ? aux[i + 2].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
+                            <Text style={styles.description}>
+                                {aux[i + 2] ? aux[i + 2].description + (i + 2) : ""}
+                            </Text>
+                        </View>
+                    </View>
+                    
+                    <View style={styles.inline} key={"view" + i + 1}>
+                        <View>
+                            <Image src={{ uri: aux[i + 3] ? aux[i + 3].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
+                            <Text style={styles.description}>
+                                {aux[i + 3] ? aux[i + 3].description + (i + 3) : ""}
+                            </Text>
+                        </View>
+                        <View>
+                            <Image src={{ uri: aux[i + 4] ? aux[i + 4].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
+                            <Text style={styles.description}>
+                                {aux[i + 4] ? aux[i + 4].description + (i + 4) : ""}
+                            </Text>
+                        </View>
+                        <View>
+                            <Image src={{ uri: aux[i + 5] ? aux[i + 5].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
+                            <Text style={styles.description}>
+                                {aux[i + 5] ? aux[i + 5].description + (i + 5) : ""}
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.inline} key={"view" + i + 2}>
+                        <View>
+                            <Image src={{ uri: aux[i + 6] ? aux[i + 6].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
+                            <Text style={styles.description}>
+                                {aux[i + 6] ? aux[i + 6].description + (i + 6) : ""}
+                            </Text>
+                        </View>
+                        <View>
+                            <Image src={{ uri: aux[i + 7] ? aux[i + 7].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
+                            <Text style={styles.description}>
+                                {aux[i + 7] ? aux[i + 7].description + (i + 7) : ""}
+                            </Text>
+                        </View>
+                        <View>
+                            <Image src={{ uri: aux[i + 8] ? aux[i + 8].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
+                            <Text style={styles.description}>
+                                {aux[i + 8] ? aux[i + 8].description + (i + 8) : ""}
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+            );
+        }
+        setQrCodesPDF(table);
+
+        setTimeout(() => {
+            setQrCodesLoaded(true);
+        }, 1000);
+        
+        setTimeout(() => {
+            stopLoading();
+        }, 2000);
+    }
 
     const downloadQRCode = async (e) => {
         e.preventDefault();
@@ -33,8 +132,7 @@ function Home() {
 
         // Generate a QR code for each item in the array and add it to the zip
         for (let i = 0; i < qrCodes.length; i++) {
-            const canvas = qrRef.current.querySelector("#qrCode" + i);
-
+            const canvas = qrRef?.current?.querySelector("#qrCode" + i);
             const descriptionSize = qrCodes[i]["description"].length;
             
             // Add margin to the QR Code
@@ -102,11 +200,7 @@ function Home() {
                     setQrCodes(dataFormatted);
 
                     setTimeout(() => {
-                        setQrCodesLoaded(true);
-                    }, 500);
-
-                    setTimeout(() => {
-                        stopLoading();
+                        generatePDF(dataFormatted);
                     }, 1000);
                 },
             });
@@ -142,7 +236,7 @@ function Home() {
                        Scan & Go - QR Code Generator (Inspector)
                     </h1>
 
-                    <Spacer size={24} vertical />
+                    <Spacer size={24} horizontal={false} />
 
                     <Button variant="contained" size="large" component="label" startIcon={<UploadIcon />}>
                         Upload
@@ -152,7 +246,15 @@ function Home() {
                     <Spacer size={24} horizontal />
 
                     <Button variant="contained" size="large" onClick={downloadQRCode} disabled={!qrCodesLoaded} startIcon={<DownloadIcon />}>
-                        Download
+                        Download ZIP
+                    </Button>
+
+                    <Spacer size={20} horizontal />
+
+                    <Button variant="contained" size="large" component="label" startIcon={<PdfIcon />} className="pdf-button">
+                        <PDFDownloadLink document={<MyDocument data={qrCodesPDF} />} fileName="QR Codes.pdf">
+                            {({ blob, url, loading, error }) => "Download PDF" }
+                        </PDFDownloadLink>
                     </Button>
 
                     <Spacer size={20} horizontal />
@@ -161,8 +263,18 @@ function Home() {
                         Clear
                     </Button>
                 </Box>
+                
+                <Spacer size={20} horizontal />
+                
+                <Fade in={qrCodesLoaded} timeout={500}>
+                    <Box>
+                        <PDFViewer style={{ width: "100%", height: "1192px" }}>
+                            <MyDocument data={qrCodesPDF} />
+                        </PDFViewer>
+                    </Box>
+                </Fade>
 
-                <Box sx={{ display: "flex", marginTop: "96px" }}>
+                <Box sx={{ display: "none", marginTop: "96px" }}>
                     <Fade
                         in={qrCodesLoaded}
                         timeout={500}
