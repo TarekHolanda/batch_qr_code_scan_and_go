@@ -25,6 +25,7 @@ import { darkTheme } from "./darkTheme";
 import { styles } from "./styles";
 import { MyDocument } from "./MyDocument";
 
+// Test
 function Home() {
     const [qrCodes, setQrCodes] = useState([]);
     const [qrCodesPDF, setQrCodesPDF] = useState(<View></View>);
