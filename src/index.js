@@ -52,21 +52,21 @@ function Home() {
                         <View>
                             <Image src={{ uri: aux[i] ? aux[i].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
                             <Text style={styles.description}>
-                                {aux[i] ? aux[i].description + (i) : ""}
+                                {aux[i] ? aux[i].description : ""}
                             </Text>
                         </View>
                         
                         <View>
                             <Image src={{ uri: aux[i + 1] ? aux[i + 1].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
                             <Text style={styles.description}>
-                                {aux[i + 1] ? aux[i + 1].description + (i + 1) : ""}
+                                {aux[i + 1] ? aux[i + 1].description : ""}
                             </Text>
                         </View>
                         
                         <View>
                             <Image src={{ uri: aux[i + 2] ? aux[i + 2].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
                             <Text style={styles.description}>
-                                {aux[i + 2] ? aux[i + 2].description + (i + 2) : ""}
+                                {aux[i + 2] ? aux[i + 2].description : ""}
                             </Text>
                         </View>
                     </View>
@@ -75,19 +75,19 @@ function Home() {
                         <View>
                             <Image src={{ uri: aux[i + 3] ? aux[i + 3].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
                             <Text style={styles.description}>
-                                {aux[i + 3] ? aux[i + 3].description + (i + 3) : ""}
+                                {aux[i + 3] ? aux[i + 3].description : ""}
                             </Text>
                         </View>
                         <View>
                             <Image src={{ uri: aux[i + 4] ? aux[i + 4].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
                             <Text style={styles.description}>
-                                {aux[i + 4] ? aux[i + 4].description + (i + 4) : ""}
+                                {aux[i + 4] ? aux[i + 4].description : ""}
                             </Text>
                         </View>
                         <View>
                             <Image src={{ uri: aux[i + 5] ? aux[i + 5].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
                             <Text style={styles.description}>
-                                {aux[i + 5] ? aux[i + 5].description + (i + 5) : ""}
+                                {aux[i + 5] ? aux[i + 5].description : ""}
                             </Text>
                         </View>
                     </View>
@@ -96,19 +96,19 @@ function Home() {
                         <View>
                             <Image src={{ uri: aux[i + 6] ? aux[i + 6].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
                             <Text style={styles.description}>
-                                {aux[i + 6] ? aux[i + 6].description + (i + 6) : ""}
+                                {aux[i + 6] ? aux[i + 6].description : ""}
                             </Text>
                         </View>
                         <View>
                             <Image src={{ uri: aux[i + 7] ? aux[i + 7].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
                             <Text style={styles.description}>
-                                {aux[i + 7] ? aux[i + 7].description + (i + 7) : ""}
+                                {aux[i + 7] ? aux[i + 7].description : ""}
                             </Text>
                         </View>
                         <View>
                             <Image src={{ uri: aux[i + 8] ? aux[i + 8].qrCodeDataUri : "./all-white.png", method: "GET", headers: { "Cache-Control": "no-cache" }, body: "" }} style={styles.qrCode} />
                             <Text style={styles.description}>
-                                {aux[i + 8] ? aux[i + 8].description + (i + 8) : ""}
+                                {aux[i + 8] ? aux[i + 8].description : ""}
                             </Text>
                         </View>
                     </View>
